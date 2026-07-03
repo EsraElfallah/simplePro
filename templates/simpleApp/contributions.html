@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Projects</title>
+</head>
+<body class="bg-light">
+    
+
+    <div class="container py-5">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="fw-bold text-success">
+                    <i class="bi bi-people-fill"></i>
+                    إدارة المساهمات
+                </h2>
+                <p class="text-muted">
+                    عرض وإدارة جميع المساهمات والأسهم
+                </p>
+            </div>
+
+            <a href="{% url 'add_contribtion' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i>
+                إضافة سهم
+            </a>
+        </div>
+
+        {% for c in contributionH %}
+
+        <div class="card shadow border-0 mb-4">
+            <div class="card-body">
+
+                <!-- اسم المساهم -->
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h4 class="fw-bold mb-1">
+                            <i class="bi bi-person-circle text-success"></i>
+                            {{ c.name }}
+                        </h4>
+
+                        <small class="text-muted">
+                            مساهمة في مشروع
+                        </small>
+                    </div>
+
+                    <div class="text-end">
+                        <h4 class="text-success mb-0">
+                            {{ c.amount }} د.ل
+                        </h4>
+                        <small class="text-muted">
+                            قيمة السهم
+                        </small>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- بيانات المشروع -->
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong>
+                                <i class="bi bi-folder-fill text-warning"></i>
+                                المشروع:
+                            </strong>
+                            {{ c.project }}
+                        </p>
+                    </div>
+
+                    {% if c.date %}
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong>
+                                <i class="bi bi-calendar-event"></i>
+                                التاريخ:
+                            </strong>
+                            {{ c.date }}
+                        </p>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <hr>
+
+                <!-- الأزرار -->
+                <div class="d-flex gap-2">
+
+                    <a href="{% url 'contribution_details' c.id %}"
+                    class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-eye"></i>
+                        التفاصيل
+                    </a>
+
+                    <a href="{% url 'edit_contribution' c.id %}"
+                    class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil"></i>
+                        تعديل
+                    </a>
+
+                    <a href="{% url 'delete_contribution' c.id %}"
+                    class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                        حذف
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="card shadow border-0">
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-people display-4 text-muted"></i>
+
+                <h4 class="mt-3 text-muted">
+                    لا توجد مساهمات حتى الآن
+                </h4>
+
+                <a href="{% url 'add_contribtion' %}" class="btn btn-success mt-3">
+                    إضافة أول مساهمة
+                </a>
+
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>

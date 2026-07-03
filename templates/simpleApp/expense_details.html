@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+    
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3>تفاصيل المصاريف</h3>
+            </div>
+            
+            <div class="card-body">
+                <strong><p>{{expense.name}}</p> </strong>
+                <strong><p>{{expense.value}}</p> </strong>
+                <strong><p>{{expense.category}}</p></strong>
+                <strong><p>{{expense.project}}</p></strong>
+            </div>
+    </div>
+</body>
+</html>

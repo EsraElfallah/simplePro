@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة تصنيف</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body{
+            background-color: #f8f9fa;
+        }
+
+        .category-card{
+            border: none;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card category-card shadow-lg">
+                <div class="card-body p-5">
+
+                    <!-- العنوان -->
+                    <div class="text-center mb-5">
+                        <div class="bg-primary bg-opacity-10 d-inline-flex p-3 rounded-circle">
+                            <i class="bi bi-tags-fill text-primary fs-2"></i>
+                        </div>
+
+                        <h2 class="fw-bold mt-3">
+                            إضافة تصنيف جديد
+                        </h2>
+
+                        <p class="text-muted">
+                            أدخل بيانات التصنيف ثم اضغط على حفظ.
+                        </p>
+                    </div>
+
+                    <!-- الفورم -->
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {{ catFormH.as_p }}
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+
+                            <button type="submit"
+                                    class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i>
+                                حفظ
+                            </button>
+
+                            <a href="{% url 'categories' %}"
+                               class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-right"></i>
+                                رجوع
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
