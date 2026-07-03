@@ -45,20 +45,28 @@ def project_details(request, id):
         total=Sum('value')
     )['total'] or 0
 
-    funding_percentage = (total_contributions / project.budget) * 100 if project.budget else 0
+    funding_percentage = (
+        (total_contributions / project.budget) * 100
+        if project.budget else 0
+    )
+
     surplus = max(total_contributions - project.budget, 0)
     over_budget = total_expenses > project.budget
 
-    # ✅ FIXED: correct field name + aggregation
-    contributors = Contribution.objects.filter(project=project)\
-        .values('contributor__name')\
-        .annotate(total=Sum('amount'))
+    # ⚠️ IMPORTANT: تأكد اسم الحقل في موديل Contribution
+    # إذا عندك ForeignKey اسمها contributor هذا صح
+    # إذا اسمها user أو name غيره لازم تعدله هنا
 
-    # calculate percentage per contributor
+    contributors = (
+        Contribution.objects.filter(project=project)
+        .values('contributor__name')
+        .annotate(total=Sum('amount'))
+    )
+
     for c in contributors:
         c['percentage'] = (
             (c['total'] / total_contributions) * 100
-            if total_contributions else 0
+            if total_contributions > 0 else 0
         )
 
     over_amount = max(total_expenses - total_contributions, 0)
