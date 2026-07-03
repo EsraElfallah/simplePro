@@ -259,9 +259,12 @@ def contributers(request):
 
     for item in data:
         project_name = item['project__name']
-        project_total = project_totals[project_name]
+        project_total = project_totals.get(project_name,0)
 
-        item['percentage'] = round((item['total'] / project_total) * 100, 2)
+        if project_total > 0:
+            item['percentage'] = round((item['total'] / project_total) * 100, 2)
+        else:
+            item['percentage'] = 0
 
     return render(request, 'simpleApp/contributers.html', {
         'contributors': data
