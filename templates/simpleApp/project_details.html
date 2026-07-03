@@ -173,7 +173,7 @@
             <tbody>
                 {% for c in contributors %}
                 <tr>
-                    <td>{{ c.name }}</td>
+                    <td>{{ c.contributor__name }}</td>
                     <td>{{ c.total }}</td>
                     <td>{{ c.percentage|floatformat:1 }}%</td>
                 </tr>
