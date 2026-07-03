@@ -59,7 +59,7 @@ def project_details(request, id):
 
     contributors = (
         Contribution.objects.filter(project=project)
-        .values('contributor__name')
+        .values('name')
         .annotate(total=Sum('amount'))
     )
 
@@ -245,7 +245,7 @@ def edit_category(request, id):
 # ---------------- CONTRIBUTORS REPORT ----------------
 def contributers(request):
     data = Contribution.objects.values(
-        'contributor__name',
+        'name',
         'project__name'
     ).annotate(
         total=Sum('amount'),
@@ -261,9 +261,7 @@ def contributers(request):
         project_name = item['project__name']
         project_total = project_totals[project_name]
 
-        item['percentage'] = round(
-            (item['total'] / project_total) * 100, 2
-        )
+        item['percentage'] = round((item['total'] / project_total) * 100, 2)
 
     return render(request, 'simpleApp/contributers.html', {
         'contributors': data
