@@ -8,23 +8,23 @@ from django.http import HttpResponse
 # ---------------- DASHBOARD ----------------
 def dashboard(request):
     projectN = Project.objects.count()
-    expenseN = Expense.objects.count()
-    contributionN = Contribution.objects.count()
+    # expenseN = Expense.objects.count()
+    # contributionN = Contribution.objects.count()
 
-    expenseT = Expense.objects.aggregate(total=Sum('value'))['total'] or 0
-    contributionT = Contribution.objects.aggregate(total=Sum('amount'))['total'] or 0
+    # expenseT = Expense.objects.aggregate(total=Sum('value'))['total'] or 0
+    # contributionT = Contribution.objects.aggregate(total=Sum('amount'))['total'] or 0
 
-    last_expenses = Expense.objects.order_by('-date')[:5]
-    last_contribution = Contribution.objects.order_by('-date')[:5]
+    # last_expenses = Expense.objects.order_by('-date')[:5]
+    # last_contribution = Contribution.objects.order_by('-date')[:5]
 
     context = {
         'projectNum': projectN,
-        'expenseNum': expenseN,
-        'contributionNum': contributionN,
-        'totalExpense': expenseT,
-        'totalContribution': contributionT,
-        'last_exp': last_expenses,
-        'last_cont': last_contribution,
+        # 'expenseNum': expenseN,
+        # 'contributionNum': contributionN,
+        # 'totalExpense': expenseT,
+        # 'totalContribution': contributionT,
+        # 'last_exp': last_expenses,
+        # 'last_cont': last_contribution,
     }
     return render(request, 'simpleApp/dashboard.html', {})
 
