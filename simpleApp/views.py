@@ -4,29 +4,38 @@ from .models import Project, Expense, Category, Contribution
 from .forms import ProjectForm, ExpenseForm, ContributionForm, CategoryForm
 from django.http import HttpResponse
 
-
-# ---------------- DASHBOARD ----------------
 def dashboard(request):
     projectN = Project.objects.count()
-    expenseN = Expense.objects.count()
-    contributionN = Contribution.objects.count()
 
-    expenseT = Expense.objects.aggregate(total=Sum('value'))['total'] or 0
-    contributionT = Contribution.objects.aggregate(total=Sum('amount'))['total'] or 0
+    try:
+        expenseN = Expense.objects.count()
+    except Exception as e:
+        return HttpResponse(f"Expense error: {e}")
 
-    last_expenses = Expense.objects.order_by('-date')[:5]
-    last_contribution = Contribution.objects.order_by('-date')[:5]
+    return HttpResponse(f"OK: {projectN} / {expenseN}")
 
-    context = {
-        'projectNum': projectN,
-        'expenseNum': expenseN,
-        'contributionNum': contributionN,
-        'totalExpense': expenseT,
-        'totalContribution': contributionT,
-        'last_exp': last_expenses,
-        'last_cont': last_contribution,
-    }
-    return render(request, 'simpleApp/dashboard.html')
+# ---------------- DASHBOARD ----------------
+# def dashboard(request):
+#     projectN = Project.objects.count()
+#     expenseN = Expense.objects.count()
+#     contributionN = Contribution.objects.count()
+
+#     expenseT = Expense.objects.aggregate(total=Sum('value'))['total'] or 0
+#     contributionT = Contribution.objects.aggregate(total=Sum('amount'))['total'] or 0
+
+#     last_expenses = Expense.objects.order_by('-date')[:5]
+#     last_contribution = Contribution.objects.order_by('-date')[:5]
+
+#     context = {
+#         'projectNum': projectN,
+#         'expenseNum': expenseN,
+#         'contributionNum': contributionN,
+#         'totalExpense': expenseT,
+#         'totalContribution': contributionT,
+#         'last_exp': last_expenses,
+#         'last_cont': last_contribution,
+#     }
+#     return render(request, 'simpleApp/dashboard.html')
 
 
 # ---------------- PROJECTS ----------------
