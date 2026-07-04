@@ -2,14 +2,13 @@ from django.urls import path
 from . import views
 from django.http import HttpResponse
 
-def test(request):
-    return HttpResponse("TEST OK")
+
 
 urlpatterns=[
-    path('', test),
+    
     path('projects', views.projects, name='projects'),
     path('projects/add/', views.add_project, name='add_project'),
-    # path('',views.dashboard,name='dashboard'),
+    path('',views.dashboard,name='dashboard'),
     # path('projects',views.projects,name='projects'),
     # path('projects/add/',views.add_project,name='add_project'),
     # path('projects/<int:id>/delete',views.delete_project,name="delete_project"),
