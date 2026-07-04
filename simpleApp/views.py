@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 # ---------------- DASHBOARD ----------------
 def dashboard(request):
-    projectN = Project.objects.count()
+    #projectN = Project.objects.count()
     # expenseN = Expense.objects.count()
     # contributionN = Contribution.objects.count()
 
@@ -17,16 +17,16 @@ def dashboard(request):
     # last_expenses = Expense.objects.order_by('-date')[:5]
     # last_contribution = Contribution.objects.order_by('-date')[:5]
 
-    context = {
-        'projectNum': projectN,
-        # 'expenseNum': expenseN,
-        # 'contributionNum': contributionN,
-        # 'totalExpense': expenseT,
-        # 'totalContribution': contributionT,
-        # 'last_exp': last_expenses,
-        # 'last_cont': last_contribution,
-    }
-    return render(request, 'simpleApp/dashboard.html', context)
+    # context = {
+    #     # 'projectNum': projectN,
+    #     # 'expenseNum': expenseN,
+    #     # 'contributionNum': contributionN,
+    #     # 'totalExpense': expenseT,
+    #     # 'totalContribution': contributionT,
+    #     # 'last_exp': last_expenses,
+    #     # 'last_cont': last_contribution,
+    # }
+    return render(request, 'simpleApp/dashboard.html')
 
 
 # ---------------- PROJECTS ----------------
