@@ -26,7 +26,7 @@ def dashboard(request):
         # 'last_exp': last_expenses,
         # 'last_cont': last_contribution,
     }
-    return render(request, 'simpleApp/dashboard.html', {})
+    return render(request, 'simpleApp/dashboard.html', context)
 
 
 # ---------------- PROJECTS ----------------
