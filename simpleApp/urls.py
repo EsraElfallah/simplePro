@@ -21,10 +21,10 @@ urlpatterns=[
     path('contributions/<int:id>/delete',views.delete_contribution,name='delete_contribution'),
     path('contributions/<int:id>/edit',views.edit_contribution,name='edit_contribution'),
     path('contributions/<int:id>',views.contribution_details,name='contribution_details'),
-    # path('categories',views.categories,name='categories'),
-    # path('categories/add',views.add_category,name='add_category'),
-    # path('categories/<int:id>/delete',views.delete_category,name='delete_category'),
-    # path('categories/<int:id>/edit',views.edit_category,name='edit_category'),
+    path('categories',views.categories,name='categories'),
+    path('categories/add',views.add_category,name='add_category'),
+    path('categories/<int:id>/delete',views.delete_category,name='delete_category'),
+    path('categories/<int:id>/edit',views.edit_category,name='edit_category'),
     # path('contributers',views.contributers,name='contributers'),
     
 ]
