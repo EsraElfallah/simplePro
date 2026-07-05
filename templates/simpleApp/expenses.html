@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,142 +7,201 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <title>Projects</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>مصاريف</title>
+    <style>
+
+        .card{
+        transition:.25s;
+        }
+
+        .card:hover{
+        transform:translateY(-4px);
+        }
+
+        .btn{
+        border-radius:10px;
+        }
+
+        .form-select{
+        border-radius:10px;
+        }
+
+    </style>
 </head>
 <body class="bg-light">
-    <body class="bg-light">
+    
 
-<div class="container py-5">
+    <div class="container-xl mt-4">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h2 class="fw-bold text-danger">
-                <i class="bi bi-cash-stack"></i>
-                إدارة المصروفات
-            </h2>
-            <p class="text-muted">
-                عرض وإدارة جميع المصروفات والفواتير
-            </p>
-        </div>
-
-        <a href="{% url 'add_expense' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>
-            إضافة فاتورة
-        </a>
-
-        <a href="{% url 'dashboard' %}"
-            class="btn btn-outline-secondary px-4">
-            <i class="bi bi-arrow-right"></i>
-            رجوع
-        </a>
-    </div>
-
-    {% for e in expensesH %}
-
-    <div class="card shadow border-0 mb-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-body">
 
-            <!-- اسم المصروف -->
-            <div class="d-flex justify-content-between align-items-center">
+            <form method="GET" class="row align-items-center">
 
-                <div>
-                    <h4 class="fw-bold mb-1">
-                        <i class="bi bi-receipt text-danger"></i>
-                        {{ e.name }}
-                    </h4>
+                <div class="col-md-3">
 
-                    <span class="badge bg-secondary">
-                        {{ e.category }}
-                    </span>
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-funnel"></i>
+                        تصفية حسب الفئة
+                    </label>
+
+                    <select
+                        name="category"
+                        onchange="this.form.submit()"
+                        class="form-select">
+
+                        <option value="">كل الفئات</option>
+
+                        {% for category in categories %}
+                        <option
+                            value="{{ category.id }}"
+                            {% if request.GET.category == category.id|stringformat:"s" %}
+                            selected
+                            {% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
                 </div>
 
-                <div class="text-end">
-                    <h4 class="text-danger mb-0">
-                        {{ e.value }} د.ل
-                    </h4>
-                    <small class="text-muted">
-                        قيمة المصروف
-                    </small>
-                </div>
+            </form>
 
+        </div>
+    </div>
+
+    
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h2 class="fw-bold text-primary mb-1"><i class="bi bi-wallet2 me-2"></i> إدارة المصروفات</h2>
+
+                            <p class="text-secondary mb-0"> عرض جميع المصروفات وإدارتها</p>
+                        </div>
+
+                        <div>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary me-2"><i class="bi bi-arrow-right"></i> الرئيسية</a>
+
+                            <a href="{% url 'add_expense' %}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> إضافة فاتورة</a>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
-            <hr>
+        </div>
+    </div>
 
-            <div class="row">
 
-                <div class="col-md-6">
-                    <p class="mb-2">
-                        <strong>
-                            <i class="bi bi-folder"></i>
-                            المشروع:
-                        </strong>
+
+        {% for e in expenses %}
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body">
+
+                <!-- اسم المصروف -->
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h4 class="fw-bold">
+                            <i class="bi bi-receipt-cutoff text-primary me-2"></i>
+
+                            {{ e.name }}
+
+                        </h4>
+
+                        <span class="badge bg-secondary">
+                            {{ e.category }}
+                        </span>
+                    </div>
+
+                    <div class="text-end">
+                        <span class="badge bg-danger fs-5 px-4 py-3 rounded-pill">
+                            {{ e.value }} د.ل
+                        </span>
+                            
+                        <small class="text-muted">
+                            قيمة المصروف
+                        </small>
+                    </div>
+
+                </div>
+
+                <hr>
+                
+                <div class="row text-secondary">
+
+                    <div class="col-md-6">
+
+                        <i class="bi bi-folder-fill text-primary"></i>
+
+                        <strong>المشروع :</strong>
+
                         {{ e.project }}
-                    </p>
-                </div>
 
-                <div class="col-md-6">
-                    <p class="mb-2">
-                        <strong>
-                            <i class="bi bi-tags"></i>
-                            التصنيف:
-                        </strong>
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <i class="bi bi-tag-fill text-success"></i>
+
+                        <strong>التصنيف :</strong>
+
                         {{ e.category }}
-                    </p>
+
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+                <!-- الأزرار -->
+                <div class="d-flex justify-content-end gap-2 mt-3">
+
+                    <a href="{% url 'expense_details' e.id %}" class="btn btn-light border"><i class="bi bi-eye"></i></a>
+
+                    <a href="{% url 'edit_expense' e.id %}" class="btn btn-warning text-white"><i class="bi bi-pencil"></i></a>
+
+                    <a href="{% url 'delete_expense' e.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+
                 </div>
 
             </div>
+        </div>
 
-            <hr>
+        {% empty %}
 
-            <!-- الأزرار -->
-            <div class="d-flex gap-2">
+        <div class="card shadow border-0">
+            <div class="card-body text-center py-5">
 
-                <a href="{% url 'expense_details' e.id %}"
-                   class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-eye"></i>
-                    التفاصيل
-                </a>
+                <i class="bi bi-receipt-cutoff display-4 text-muted"></i>
 
-                <a href="{% url 'edit_expense' e.id %}"
-                   class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-pencil"></i>
-                    تعديل
-                </a>
+                <h4 class="mt-3 text-muted">
+                    لا توجد مصروفات حتى الآن
+                </h4>
 
-                <a href="{% url 'delete_expense' e.id %}"
-                   class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-trash"></i>
-                    حذف
+                <a href="{% url 'add_expense' %}" class="btn btn-primary mt-3">
+                    إضافة أول فاتورة
                 </a>
 
             </div>
-
         </div>
+
+        {% endfor %}
+
     </div>
-
-    {% empty %}
-
-    <div class="card shadow border-0">
-        <div class="card-body text-center py-5">
-
-            <i class="bi bi-receipt-cutoff display-4 text-muted"></i>
-
-            <h4 class="mt-3 text-muted">
-                لا توجد مصروفات حتى الآن
-            </h4>
-
-            <a href="{% url 'add_expense' %}" class="btn btn-primary mt-3">
-                إضافة أول فاتورة
-            </a>
-
-        </div>
-    </div>
-
-    {% endfor %}
-
-</div>
 
 </body>
 </html>

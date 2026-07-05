@@ -90,7 +90,16 @@ def project_details(request, id):
 # ---------------- EXPENSES ----------------
 def expenses(request):
     expenses = Expense.objects.all()
-    return render(request, 'simpleApp/expenses.html', {'expensesH': expenses})
+    category = request.GET.get('category')
+    if category:
+        expenses = expenses.filter(category_id=category)
+    
+    categories = Category.objects.all()
+    context = {
+        "expenses": expenses,
+        "categories": categories,
+    }
+    return render(request, 'simpleApp/expenses.html', context)
 
 
 def add_expense(request):

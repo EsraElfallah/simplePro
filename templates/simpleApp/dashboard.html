@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <title>Simple App</title>
 </head>
@@ -14,30 +15,19 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
-                <i class="bi bi-kanban"></i> Simple App
-            </a>
+            <a class="navbar-brand fw-bold fs-2 text-white text-uppercase" href="{% url 'dashboard' %}" style="letter-spacing: 1.5px;"> <i class="bi bi-wallet2-fill me-2"></i> إدارة مالي</a>
 
             <div class="navbar-nav ms-auto">
-                <a class="nav-link text-white" href="{% url 'projects' %}">
-                    <i class="bi bi-folder"></i> المشاريع
-                </a>
+                
+                <a class="nav-link text-white" href="{% url 'projects' %}"><i class="bi bi-folder"></i> المشاريع</a>
 
-                <a class="nav-link text-white" href="{% url 'expenses' %}">
-                    <i class="bi bi-cash-stack"></i> المصروفات
-                </a>
+                <a class="nav-link text-white" href="{% url 'expenses' %}"><i class="bi bi-cash-stack"></i> المصروفات</a>
 
-                <a class="nav-link text-white" href="{% url 'contributions' %}">
-                    <i class="bi bi-people"></i> المساهمات
-                </a>
+                <a class="nav-link text-white" href="{% url 'contributions' %}"><i class="bi bi-people"></i> المساهمات</a>
 
-                <a class="nav-link text-white" href="{% url 'categories' %}">
-                    <i class="bi bi-tags"></i> التصنيفات
-                </a>
+                <a class="nav-link text-white" href="{% url 'categories' %}"><i class="bi bi-tags"></i> التصنيفات</a>
 
-                <a class="nav-link text-white" href="{% url 'contributers' %}">
-                    <i class="bi bi-tags"></i> المساهمين
-                </a>
+                <a class="nav-link text-white" href="{% url 'contributers' %}"><i class="bi bi-tags"></i> المساهمين</a>
             </div>
         </div>
     </nav>
@@ -160,6 +150,6 @@
 </body>
 
 <footer class="text-center text-secondary py-4 mt-5 border-top">
-    SimplePro v1.0.0 © 2026
+    SimplePro v2.0.0 © 2026
 </footer>
 </html>
