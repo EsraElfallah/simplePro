@@ -1,21 +1,50 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <title>Delete Project</title>
-</head>
-<body>
-    <h2>حذف مشروع</h2>
-    <form method="post">
-        {%csrf_token%}
-        {{form.as_p}}
-        <button type="submit">
-            حذف المشروع
-        </button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}حذف{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body text-center p-5">
+
+                    <h3 class="text-danger mb-3">
+                        هل أنت متأكد من حذف المشروع؟
+                    </h3>
+
+                    <p class="text-muted">
+                        لا يمكن التراجع عن هذه العملية بعد الحذف.
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+
+                            <button type="submit" class="btn btn-danger px-4">
+                                نعم، حذف
+                            </button>
+
+                            <a href="{% url 'projects' %}" class="btn btn-secondary px-4">
+                                إلغاء
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

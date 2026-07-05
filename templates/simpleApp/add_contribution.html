@@ -1,18 +1,6 @@
-
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة سهم</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+{%extends 'base.html'%}
+{%block title%}اضافة مساهمة{%endblock%}
+{%block content%}
     <style>
         body{
             background-color: #f8f9fa;
@@ -23,8 +11,7 @@
             border-radius: 20px;
         }
     </style>
-</head>
-<body>
+
 
 <div class="container py-5">
 
@@ -54,7 +41,20 @@
                     <form method="post">
                         {% csrf_token %}
 
-                        {{ cform.as_p }}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">اسم السهم</label>
+                             {{ cform.name}}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">قيمة المساهمة</label>
+                             {{ cform.amount}}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">اسم المشروع</label>
+                             {{ cform.project}}
+                        </div>
 
                         <div class="d-flex justify-content-center gap-3 mt-4">
 
@@ -82,6 +82,4 @@
     </div>
 
 </div>
-
-</body>
-</html>
+{%endblock%}

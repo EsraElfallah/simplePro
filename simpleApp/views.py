@@ -197,8 +197,12 @@ def add_project(request):
 
 def delete_project(request, id):
     project = get_object_or_404(Project, id=id)
-    project.delete()
-    return redirect('projects')
+
+    if request.method == "POST":
+        project.delete()
+        return redirect('projects')
+
+    return render(request, 'simpleApp/delete_project.html', {'project': project})
 
 
 def edit_project(request, id):
