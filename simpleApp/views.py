@@ -374,7 +374,7 @@ def loginv(request):
 
 
 
-@login_required  # ❌ لا تضعها هنا (خطأ شائع)
+  
 def signupv(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
