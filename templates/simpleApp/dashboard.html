@@ -78,8 +78,10 @@
             <div class="card-body">
                 <ol class="list-group list-group-numbered">
                     {% for l_e in last_exp %}
-                        <li class="list-group-item">{{ l_e }}</li>
-                    {% endfor %}
+                    <li class="list-group-item">
+                        {{ l_e.name }} - {{ l_e.value }}
+                    </li>
+                {% endfor %}
                 </ol>
             </div>
         </div>
@@ -94,7 +96,9 @@
             <div class="card-body">
                 <ol class="list-group list-group-numbered">
                     {% for l_c in last_cont %}
-                        <li class="list-group-item">{{ l_c.amount }}</li>
+                        <li class="list-group-item">
+                            {{ l_c.name }} - {{ l_c.value }}
+                        </li>
                     {% endfor %}
                 </ol>
             </div>
@@ -102,5 +106,12 @@
     </div>
 
 </div>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">
+        تسجيل خروج
+    </button>
+</form>
 
 {% endblock %}

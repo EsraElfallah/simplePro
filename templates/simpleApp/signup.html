@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5" style="max-width:500px">
+
+    <h3 class="text-center mb-4">تسجيل حساب جديد</h3>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary w-100">
+            تسجيل
+        </button>
+    </form>
+
+    <p class="text-center mt-3">
+        عندك حساب؟ <a href="{% url 'login' %}">دخول</a>
+    </p>
+
+</div>
+
+{% endblock %}

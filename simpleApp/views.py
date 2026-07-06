@@ -2,23 +2,34 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, Count
 from .models import Project, Expense, Category, Contribution
 from .forms import ProjectForm, ExpenseForm, ContributionForm, CategoryForm
-from django.http import HttpResponse
-
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 # ---------------- DASHBOARD ----------------
+@login_required
 def dashboard(request):
-    projectN = Project.objects.count()
-    expenseN = Expense.objects.count()
-    contributionN = Contribution.objects.count()
+    # المشاريع الخاصة بالمستخدم
+    projects = Project.objects.filter(user=request.user)
 
-    expenseT = Expense.objects.aggregate(total=Sum('value'))['total'] or 0
-    contributionT = Contribution.objects.aggregate(total=Sum('amount'))['total'] or 0
+    projectN = projects.count()
 
-    last_expenses = Expense.objects.order_by('-date')[:5]
-    last_contribution = Contribution.objects.order_by('-date')[:5]
+    # كل expenses الخاصة بمشاريع المستخدم
+    expenses = Expense.objects.filter(project__user=request.user)
+    expenseN = expenses.count()
+
+    # كل contributions الخاصة بالمستخدم
+    contributions = Contribution.objects.filter(project__user=request.user)
+    contributionN = contributions.count()
+
+    expenseT = expenses.aggregate(total=Sum('value'))['total'] or 0
+    contributionT = contributions.aggregate(total=Sum('amount'))['total'] or 0
+
+    last_expenses = expenses.order_by('-date')[:5]
+    last_contribution = contributions.order_by('-date')[:5]
 
     context = {
+        'projects':projects,
         'projectNum': projectN,
         'expenseNum': expenseN,
         'contributionNum': contributionN,
@@ -27,17 +38,19 @@ def dashboard(request):
         'last_exp': last_expenses,
         'last_cont': last_contribution,
     }
-    return render(request, 'simpleApp/dashboard.html',context)
+
+    return render(request, 'simpleApp/dashboard.html', context)
 
 
 # ---------------- PROJECTS ----------------
+@login_required
 def projects(request):
-    projects = Project.objects.all()
+    projects = Project.objects.filter(user=request.user)
     return render(request, 'simpleApp/projects.html', {'projectsH': projects})
 
-
+@login_required
 def project_details(request, id):
-    project = get_object_or_404(Project, id=id)
+    project = get_object_or_404(Project, id=id, user=request.user)
 
     total_contributions = Contribution.objects.filter(project=project).aggregate(
         total=Sum('amount')
@@ -54,10 +67,6 @@ def project_details(request, id):
 
     surplus = max(total_contributions - project.budget, 0)
     over_budget = total_expenses > project.budget
-
-    # ⚠️ IMPORTANT: تأكد اسم الحقل في موديل Contribution
-    # إذا عندك ForeignKey اسمها contributor هذا صح
-    # إذا اسمها user أو name غيره لازم تعدله هنا
 
     contributors = (
         Contribution.objects.filter(project=project)
@@ -88,45 +97,71 @@ def project_details(request, id):
 
 
 # ---------------- EXPENSES ----------------
+@login_required
 def expenses(request):
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.filter(project__user=request.user)
+
     category = request.GET.get('category')
     if category:
         expenses = expenses.filter(category_id=category)
-    
+
     categories = Category.objects.all()
+
     context = {
         "expenses": expenses,
         "categories": categories,
     }
     return render(request, 'simpleApp/expenses.html', context)
 
-
+@login_required
 def add_expense(request):
     if request.method == 'POST':
         form = ExpenseForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            expense = form.save(commit=False)
+
+            # تأكد أن المشروع تابع للمستخدم
+            expense.project = get_object_or_404(
+                Project,
+                id=request.POST.get('project'),
+                user=request.user
+            )
+
+            expense.save()
             return redirect('expenses')
     else:
         form = ExpenseForm()
 
     return render(request, 'simpleApp/add_expense.html', {'expense': form})
 
-
+@login_required
 def delete_expense(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(
+        Expense,
+        id=id,
+        project__user=request.user
+    )
+
     expense.delete()
     return redirect('expenses')
 
-
+@login_required
 def expense_details(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(
+        Expense,
+        id=id,
+        project__user=request.user
+    )
+
     return render(request, 'simpleApp/expense_details.html', {'expense': expense})
-
-
+@login_required
 def edit_expense(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(
+        Expense,
+        id=id,
+        project__user=request.user
+    )
 
     if request.method == 'POST':
         form = ExpenseForm(request.POST, instance=expense)
@@ -140,31 +175,48 @@ def edit_expense(request, id):
 
 
 # ---------------- CONTRIBUTIONS ----------------
+@login_required
 def contributions(request):
-    contribution = Contribution.objects.all()
+    contribution = Contribution.objects.filter(project__user=request.user)
     return render(request, 'simpleApp/contributions.html', {'contributionH': contribution})
 
-
+@login_required
 def add_contribution(request):
     if request.method == 'POST':
         form = ContributionForm(request.POST)
+
+        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+
         if form.is_valid():
-            form.save()
+            contribution = form.save(commit=False)
+            contribution.save()
             return redirect('contributions')
     else:
         form = ContributionForm()
+        form.fields['project'].queryset = Project.objects.filter(user=request.user)
 
     return render(request, 'simpleApp/add_contribution.html', {'cform': form})
 
-
+@login_required
 def delete_contribution(request, id):
-    contribution = get_object_or_404(Contribution, id=id)
-    contribution.delete()
+    contribution = get_object_or_404(
+        Contribution,
+        id=id,
+        project__user=request.user
+    )
+
+    if request.method == "POST":
+        contribution.delete()
+
     return redirect('contributions')
 
-
+@login_required
 def edit_contribution(request, id):
-    contribution = get_object_or_404(Contribution, id=id)
+    contribution = get_object_or_404(
+        Contribution,
+        id=id,
+        project__user=request.user
+    )
 
     if request.method == 'POST':
         form = ContributionForm(request.POST, instance=contribution)
@@ -176,27 +228,41 @@ def edit_contribution(request, id):
 
     return render(request, 'simpleApp/edit_contribution.html', {'cform': form})
 
-
+@login_required
 def contribution_details(request, id):
-    contribution = get_object_or_404(Contribution, id=id)
+    contribution = get_object_or_404(
+        Contribution,
+        id=id,
+        project__user=request.user
+    )
+
     return render(request, 'simpleApp/contribution_details.html', {'contributionH': contribution})
 
 
 # ---------------- PROJECT CRUD ----------------
+@login_required
 def add_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            project = form.save(commit=False)  # ما نحفظوش مباشرة
+            project.user = request.user        # 👈 ربط المشروع بالمستخدم
+            project.save()
+
             return redirect('projects')
     else:
         form = ProjectForm()
 
     return render(request, 'simpleApp/add_project.html', {'form': form})
 
-
+@login_required
 def delete_project(request, id):
-    project = get_object_or_404(Project, id=id)
+    project = get_object_or_404(
+        Project,
+        id=id,
+        user=request.user
+    )
 
     if request.method == "POST":
         project.delete()
@@ -204,9 +270,13 @@ def delete_project(request, id):
 
     return render(request, 'simpleApp/delete_project.html', {'project': project})
 
-
+@login_required
 def edit_project(request, id):
-    project = get_object_or_404(Project, id=id)
+    project = get_object_or_404(
+        Project,
+        id=id,
+        user=request.user
+    )
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project)
@@ -220,11 +290,12 @@ def edit_project(request, id):
 
 
 # ---------------- CATEGORIES ----------------
+@login_required
 def categories(request):
     categories = Category.objects.all()
     return render(request, 'simpleApp/categories.html', {'categoriesH': categories})
 
-
+@login_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -236,13 +307,13 @@ def add_category(request):
 
     return render(request, 'simpleApp/add_category.html', {'catFormH': form})
 
-
+@login_required
 def delete_category(request, id):
     cat = get_object_or_404(Category, id=id)
     cat.delete()
     return redirect('categories')
 
-
+@login_required
 def edit_category(request, id):
     cat = get_object_or_404(Category, id=id)
 
@@ -258,6 +329,7 @@ def edit_category(request, id):
 
 
 # ---------------- CONTRIBUTORS REPORT ----------------
+@login_required
 def contributers(request):
     data = Contribution.objects.values(
         'name',
@@ -284,3 +356,33 @@ def contributers(request):
     return render(request, 'simpleApp/contributers.html', {
         'contributors': data
     })
+
+#---------------------------------------------login_view-------------------------
+def loginv(request):
+    if request.method == 'POST':
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+
+        user =authenticate(username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('dashboard')
+        else:
+            return render(request, "simpleApp/login.html", {"error": "بيانات غير صحيحة"})
+    return render(request, "simpleApp/login.html")
+
+
+
+
+@login_required  # ❌ لا تضعها هنا (خطأ شائع)
+def signupv(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # يدخل مباشرة بعد التسجيل
+            return redirect('dashboard')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'simpleApp/signup.html', {'form': form})

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Project(models.Model):
@@ -10,6 +11,7 @@ class Project(models.Model):
     ]
 
     name=models.CharField(max_length=255,default='project')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='projects')
     project_details=models.TextField()
     budget=models.DecimalField(max_digits=12,decimal_places=2)
     status=models.CharField(max_length=20,choices=STATUS_CHOICES,default='planning')

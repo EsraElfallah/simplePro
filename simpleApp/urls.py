@@ -1,11 +1,12 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 
 
 
 urlpatterns=[
-    path('',views.dashboard,name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('projects',views.projects,name='projects'),
     path('projects/add/',views.add_project,name='add_project'),
     path('projects/<int:id>/delete',views.delete_project,name="delete_project"),
@@ -26,5 +27,7 @@ urlpatterns=[
     path('categories/<int:id>/delete',views.delete_category,name='delete_category'),
     path('categories/<int:id>/edit',views.edit_category,name='edit_category'),
     path('contributers',views.contributers,name='contributers'),
-    
+    path('login/', views.loginv, name='login'),
+    path('signup/', views.signupv, name='signup'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
