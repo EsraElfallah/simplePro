@@ -11,7 +11,7 @@ class Project(models.Model):
     ]
 
     name=models.CharField(max_length=255,default='project')
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='projects')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='projects',null=True, blank=True)
     project_details=models.TextField()
     budget=models.DecimalField(max_digits=12,decimal_places=2)
     status=models.CharField(max_length=20,choices=STATUS_CHOICES,default='planning')
