@@ -381,7 +381,7 @@ def signupv(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # يدخل مباشرة بعد التسجيل
-            return redirect('dashboard')
+            return redirect('login')
     else:
         form = UserCreationForm()
 
