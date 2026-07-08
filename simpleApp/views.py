@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, Count
 from .models import Project, Expense, Category, Contribution
-from .forms import ProjectForm, ExpenseForm, ContributionForm, CategoryForm
+from .forms import ProjectForm, ExpenseForm, ContributionForm, CategoryForm,SignupForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+
 
 # ---------------- DASHBOARD ----------------
 @login_required
@@ -377,12 +378,12 @@ def loginv(request):
   
 def signupv(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # يدخل مباشرة بعد التسجيل
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = SignupForm()
 
     return render(request, 'simpleApp/signup.html', {'form': form})

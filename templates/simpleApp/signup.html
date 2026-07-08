@@ -1,30 +1,83 @@
+
 {% extends 'base.html' %}
 
-{%block navbar%}
-
-
-{%endblock%}
+{% block navbar %}
+{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5" style="max-width:500px">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
 
-    <h3 class="text-center mb-4">تسجيل حساب جديد</h3>
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
 
-    <form method="POST">
-        {% csrf_token %}
+                    <h3 class="text-center mb-4">
+                        إنشاء حساب جديد
+                    </h3>
 
-        {{ form.as_p }}
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
 
-        <button type="submit" class="btn btn-primary w-100">
-            تسجيل
-        </button>
-    </form>
+                        <!-- اسم المستخدم -->
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.username.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
 
-    <p class="text-center mt-3">
-        عندك حساب؟ <a href="{% url 'login' %}">دخول</a>
-    </p>
+                        <!-- كلمة المرور -->
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.password1.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
 
+                        <!-- تأكيد كلمة المرور -->
+                        <div class="mb-3">
+                            <label class="form-label">تأكيد كلمة المرور</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.password2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- أخطاء عامة -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <button class="btn btn-primary w-100">
+                            إنشاء الحساب
+                        </button>
+
+                    </form>
+
+                    <hr>
+
+                    <p class="text-center mb-0">
+                        لديك حساب بالفعل؟
+                        <a href="{% url 'login' %}">تسجيل الدخول</a>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}

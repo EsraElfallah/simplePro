@@ -1,5 +1,7 @@
 from django import forms
 from .models import Project,Expense,Contribution,Category
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class ProjectForm(forms.ModelForm):
@@ -79,4 +81,19 @@ class CategoryForm(forms.ModelForm):
                 'class': 'form-control rounded-3',
                 'placeholder': 'اسم فئة'
             }),}
+        
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        self.fields['username'].widget.attrs['placeholder'] = 'اسم المستخدم'
+        self.fields['password1'].widget.attrs['placeholder'] = 'كلمة المرور'
+        self.fields['password2'].widget.attrs['placeholder'] = 'تأكيد كلمة المرور'
 
