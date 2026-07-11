@@ -32,6 +32,10 @@ ALLOWED_HOSTS = [
     "simplepro-bpgp.onrender.com"
 ] 
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://simplepro-bpgp.onrender.com",
+]
+
 
 # Application definition
 
