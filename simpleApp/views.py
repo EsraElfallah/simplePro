@@ -105,12 +105,15 @@ def expenses(request):
     category = request.GET.get('category')
     if category:
         expenses = expenses.filter(category_id=category)
+    
+    exp_sum=expenses.aggregate(total=Sum('value'))['total'] or 0
 
     categories = Category.objects.all()
 
     context = {
         "expenses": expenses,
         "categories": categories,
+        "exp_sum":exp_sum,
     }
     return render(request, 'simpleApp/expenses.html', context)
 
