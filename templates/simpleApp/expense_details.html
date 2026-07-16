@@ -1,28 +1,47 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Document</title>
-</head>
-    
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h3>تفاصيل المصاريف</h3>
+{%extends "base.html"%}
+{%block title%} تفاصيل المصروفات{%endblock%}
+
+{%block content%}
+    <div class="container py-5">
+        <!-------------------Card--------------------->
+        <div class="card border-0 shadow-sm rounded-4">
+            <!------------------Card header--------------------->
+            <div class="card-header bg-primary text-white py-3 d-flex align-items-center">
+                
+                <i class="bi bi-receipt-cutoff"></i>
+                <h5 class="mb-0 fw-bold me-2">تفاصيل المصاريف</h5>
+                
             </div>
+
+            <!---------------card body-------------------------->
             
             <div class="card-body">
-                <strong><p>{{expense.name}}</p> </strong>
-                <strong><p>{{expense.value}}</p> </strong>
-                <strong><p>{{expense.category}}</p></strong>
-                <strong><p>{{expense.project}}</p></strong>
+                <!--------------Row------------->
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="text-muted fw-semibold"><i class="bi bi-receipt me-2"></i> اسم المصروف</label><p ><span class="badge bg-danger fs-6 fw-bold">{{expense.name}}</span></p> 
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted fw-semibold"><i class="bi bi-currency-dollar"></i>  القيمة</label><p><span class="badge bg-danger fs-6 fw-bold">{{expense.value}} د.ل</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted fw-semibold"><i class="bi bi-tag-fill"></i>الفئة</label><p><span class="badge bg-danger fs-6 fw-bold">{{expense.category}}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted fw-semibold"><i class="bi bi-folder-fill"></i>اسم المشروع</label><p><span class="badge bg-danger fs-6 fw-bold">{{expense.project}}</span></p>
+                    </div>
+                </div>
             </div>
+
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+               <a href="{% url 'edit_expense' expense.id %}" class="btn btn-warning text-white"> تعديل</a>
+                <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger"> حذف</a>
+                <a href="{% url 'expenses' %}" class="btn btn-light border"> رجوع</a>
+
+            </div>
+        </div>
+
+
     </div>
-</body>
-</html>
+{%endblock%}

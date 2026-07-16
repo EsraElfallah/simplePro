@@ -1,0 +1,46 @@
+{%extends "base.html"%}
+{%block title%}تأكيد  الحذف{%endblock%}
+{%block navbar%}{%endblock%}
+{%block content%}
+<div class="card">
+
+    <div class="card-header bg-danger text-white d-flex align-items-center">
+        <i class="bi bi-trash3 me-2"></i><h5 class="mb-0 fw-bold"> تأكيد حذف المصروف</h5>
+    </div>
+
+    <div class="card-body">
+
+        <p class="mb-1 fw-semibold"> هل أنت متأكد من حذف المصروف التالي؟</p>
+
+        <small class="text-danger"> لن تتمكن من استرجاعه بعد الحذف.</small>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label class="text-muted fw-semibold"> اسم المصروف </label>
+
+                <p class="mb-0 fw-bold">{{ expense.name }}</p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted fw-semibold"> قيمة المصروف </label>
+                <p class="mb-0 fw-bold">{{expense.value}}ل.د </p>
+            </div>
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <button type="submit" class="btn btn-danger">نعم حذف نهائي</button>
+
+                <a href="{% url 'expense_details' expense.id %}" class="btn btn-secondary"> إلغاء</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{%endblock%}

@@ -3,222 +3,494 @@
 {% block title %}المصروفات{% endblock %}
 
 {% block content %}
-    <style>
 
-        .card{
-        transition:.25s;
-        }
+<style>
 
-        .card:hover{
-            transform: translateY(-4px);
-            box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.08);
-        }
+.card{
+    transition:.25s;
+}
 
-        .btn{
-        border-radius:10px;
-        }
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 .8rem 1.8rem rgba(0,0,0,.08);
+}
 
-        .form-select{
-        border-radius:10px;
-        }
+.btn{
+    border-radius:12px;
+}
 
-    </style>
+.form-control,
+.form-select{
+    border-radius:12px;
+    padding:10px 15px;
+}
 
-    <div class="container-xl py-4">
+.icon-box{
+    width:55px;
+    height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+    font-size:25px;
+}
 
-        <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body">
+</style>
 
-            <div class="row align-items-center gy-3">
-                <div class="col-12">
 
-                    <h2 class="fw-bold text-primary mb-1">
-                        <i class="bi bi-wallet2 me-2"></i>
-                        إدارة المصروفات
-                    </h2>
+<div class="container-xl py-4">
 
-                    <p class="text-muted mb-0">
-                        عرض جميع المصروفات وإدارتها
-                    </p>
 
-                    <hr>
+<!-- Header -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
 
-                </div>
-                <!-- إجمالي المصروفات -->
-                <div class="col-lg-4">
+<div class="card-body p-4">
 
-                    <div class="bg-primary bg-opacity-10 rounded-4 p-3 text-center">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-                        <small class="text-muted">
-                            إجمالي المصروفات
-                        </small>
 
-                        <h3 class="fw-bold text-danger mt-2 mb-0">
-                            {{ exp_sum }} د.ل
-                        </h3>
+<div>
 
-                    </div>
+<h2 class="fw-bold text-primary mb-2">
 
-                </div>
+<i class="bi bi-wallet2 me-2"></i>
+إدارة المصروفات
 
-                <!-- الفلتر -->
-                <div class="col-lg-5">
+</h2>
 
-                    <form method="GET">
+<p class="text-muted mb-0">
+عرض وإدارة جميع المصروفات الخاصة بالمشاريع
+</p>
 
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-funnel me-1"></i>
-                            تصفية حسب الفئة
-                        </label>
+</div>
 
-                        <select
-                            name="category"
-                            class="form-select"
-                            onchange="this.form.submit()">
 
-                            <option value="">كل الفئات</option>
+<a href="{% url 'add_expense' %}"
+class="btn btn-primary rounded-pill px-4">
 
-                            {% for category in categories %}
+<i class="bi bi-plus-circle me-2"></i>
+إضافة مصروف
 
-                            <option value="{{ category.id }}"
-                                {% if request.GET.category == category.id|stringformat:"s" %}
-                                    selected
-                                {% endif %}>
+</a>
 
-                                {{ category.name }}
 
-                            </option>
+</div>
 
-                            {% endfor %}
+</div>
 
-                        </select>
+</div>
 
-                    </form>
 
-                </div>
 
-                <!-- زر الإضافة -->
-                <div class="col-lg-3 d-grid">
+<!-- Statistics -->
 
-                    <a href="{% url 'add_expense' %}"
-                    class="btn btn-primary">
+<div class="row g-4 mb-4">
 
-                        <i class="bi bi-plus-circle me-1"></i>
 
-                        إضافة فاتورة
+<div class="col-lg-4">
 
-                    </a>
+<div class="card border-0 shadow-sm rounded-4">
 
-                </div>
+<div class="card-body text-center p-4">
 
-            </div>
 
-        </div>
-    </div>
+<div class="icon-box bg-danger bg-opacity-10 text-danger mx-auto mb-3">
 
-    
+<i class="bi bi-cash-stack"></i>
 
-  
-        
+</div>
 
 
-    {% for e in expenses %}
+<h6 class="text-muted">
+إجمالي المصروفات
+</h6>
 
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body">
 
-            <!-- اسم المصروف -->
-            <div class="d-flex justify-content-between align-items-center">
+<h2 class="fw-bold text-danger">
 
-                <div>
-                    <h4 class="fw-bold">
-                        <i class="bi bi-receipt-cutoff text-primary me-2"></i>
+{{ exp_sum }} د.ل
 
-                        {{ e.name }}
+</h2>
 
-                    </h4>
 
-                    <span class="badge bg-secondary">
-                        {{ e.category }}
-                    </span>
-                </div>
+</div>
 
-                <div class="text-end">
+</div>
 
-                    <small class="text-muted d-block mb-2">
-                        قيمة المصروف
-                    </small>
+</div>
 
-                    <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill">
-                        {{ e.value }} د.ل
-                    </span>
 
-                </div>
+</div>
 
-            </div>
 
-            <hr>
-            
-            <div class="row text-secondary">
 
-                <div class="col-md-6">
 
-                    <i class="bi bi-folder-fill text-primary"></i>
+<!-- Filters -->
 
-                    <strong>المشروع :</strong>
+<div class="card border-0 shadow-sm rounded-4 mb-4">
 
-                    {{ e.project }}
 
-                </div>
+<div class="card-body p-4">
 
-                <div class="col-md-6">
 
-                    <i class="bi bi-tag-fill text-success"></i>
+<h5 class="fw-bold mb-3">
 
-                    <strong>التصنيف :</strong>
+<i class="bi bi-funnel text-primary me-2"></i>
 
-                    {{ e.category }}
+تصفية النتائج
 
-                </div>
+</h5>
 
-            </div>
 
+<form method="GET">
 
-            <hr>
 
-            <!-- الأزرار -->
-            <div class="d-flex justify-content-end gap-2 mt-3">
+<div class="row g-3">
 
-                <a href="{% url 'expense_details' e.id %}" class="btn btn-light border"><i class="bi bi-eye"></i></a>
 
-                <a href="{% url 'edit_expense' e.id %}" class="btn btn-warning text-white"><i class="bi bi-pencil"></i></a>
+<div class="col-md-4">
 
-                <a href="{% url 'delete_expense' e.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+<input
+type="text"
+class="form-control"
+name="search"
+value="{{ search|default:'' }}"
+placeholder="البحث باسم المصروف">
 
-            </div>
 
-        </div>
-    </div>
+</div>
 
-    {% empty %}
 
-    <div class="card shadow border-0">
-        <div class="card-body text-center py-5">
 
-            <i class="bi bi-receipt-cutoff display-4 text-muted"></i>
+<div class="col-md-4">
 
-            <h4 class="mt-3 text-muted">
-                لا توجد مصروفات حتى الآن
-            </h4>
+<select name="category" class="form-select">
 
-            <a href="{% url 'add_expense' %}" class="btn btn-primary mt-3">
-                إضافة أول فاتورة
-            </a>
+<option value="">
+كل الفئات
+</option>
 
-        </div>
-    </div>
 
-    {% endfor %}
+{% for category in categories %}
 
-    </div>
+<option value="{{ category.id }}"
+{% if request.GET.category == category.id|stringformat:"s" %}
+selected
+{% endif %}
+>
+
+{{ category.name }}
+
+</option>
+
+{% endfor %}
+
+
+</select>
+
+</div>
+
+
+
+
+<div class="col-md-4">
+
+
+<select name="project" class="form-select">
+
+
+<option value="">
+كل المشاريع
+</option>
+
+
+{% for project in projects %}
+
+<option value="{{ project.id }}"
+{% if request.GET.project == project.id|stringformat:"s" %}
+selected
+{% endif %}
+>
+
+{{ project.name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div class="col-md-3">
+
+<input 
+name="min_value"
+type="number"
+class="form-control"
+value="{{ request.GET.min_value }}"
+placeholder="من قيمة">
+
+
+</div>
+
+
+
+<div class="col-md-3">
+
+
+<input 
+name="max_value"
+type="number"
+class="form-control"
+value="{{ request.GET.max_value }}"
+placeholder="إلى قيمة">
+
+
+</div>
+
+
+
+<div class="col-md-3">
+
+
+<button class="btn btn-primary w-100">
+
+<i class="bi bi-search me-2"></i>
+
+بحث
+
+</button>
+
+
+</div>
+
+
+<div class="col-md-3">
+
+
+<a href="{% url 'expenses' %}"
+class="btn btn-outline-secondary w-100">
+
+<i class="bi bi-x-circle me-2"></i>
+
+إلغاء الفلاتر
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<!-- Expenses -->
+
+{% for e in expenses %}
+
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="card-body p-4">
+
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+
+<div>
+
+
+<h4 class="fw-bold mb-2">
+
+<i class="bi bi-receipt text-primary me-2"></i>
+
+{{ e.name }}
+
+</h4>
+
+
+<span class="badge bg-secondary rounded-pill px-3">
+
+{{ e.category }}
+
+</span>
+
+
+</div>
+
+
+
+<div class="text-end">
+
+
+<small class="text-muted d-block">
+قيمة المصروف
+</small>
+
+
+<h4 class="text-danger fw-bold">
+
+{{ e.value }} د.ل
+
+</h4>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<hr>
+
+
+
+<div class="row gy-3 text-secondary">
+
+
+<div class="col-md-6">
+
+<i class="bi bi-folder-fill text-primary me-2"></i>
+
+<strong>
+المشروع:
+</strong>
+
+{{ e.project }}
+
+</div>
+
+
+
+<div class="col-md-6">
+
+<i class="bi bi-tag-fill text-success me-2"></i>
+
+<strong>
+التصنيف:
+</strong>
+
+{{ e.category }}
+
+</div>
+
+
+</div>
+
+
+
+
+<hr>
+
+
+
+
+<div class="d-flex justify-content-end gap-2 flex-wrap">
+
+
+<a href="{% url 'expense_details' e.id %}"
+class="btn btn-light border">
+
+<i class="bi bi-eye me-1"></i>
+
+تفاصيل
+
+</a>
+
+
+
+<a href="{% url 'edit_expense' e.id %}"
+class="btn btn-warning text-white">
+
+<i class="bi bi-pencil me-1"></i>
+
+تعديل
+
+</a>
+
+
+
+<a href="{% url 'delete_expense' e.id %}"
+class="btn btn-danger">
+
+<i class="bi bi-trash me-1"></i>
+
+حذف
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+{% empty %}
+
+
+
+<div class="card border-0 shadow-sm rounded-4">
+
+<div class="card-body text-center py-5">
+
+
+<i class="bi bi-receipt-cutoff display-3 text-muted"></i>
+
+
+<h4 class="text-muted mt-3">
+
+لا توجد مصروفات حتى الآن
+
+</h4>
+
+
+
+<a href="{% url 'add_expense' %}"
+class="btn btn-primary mt-3 rounded-pill px-4">
+
+إضافة أول مصروف
+
+</a>
+
+
+</div>
+
+</div>
+
+
+
+{% endfor %}
+
+
+
+
+</div>
+
+
 {% endblock %}

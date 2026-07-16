@@ -102,6 +102,22 @@ def project_details(request, id):
 def expenses(request):
     expenses = Expense.objects.filter(project__user=request.user)
 
+    min_value = request.GET.get("min_value")
+    max_value = request.GET.get("max_value")
+    if min_value:
+        expenses = expenses.filter(value__gte=min_value)
+
+    if max_value:
+        expenses = expenses.filter(value__lte=max_value)
+
+    project = request.GET.get("project")
+    if project:
+        expenses = expenses.filter(project__id=project)
+
+    search = request.GET.get("search")
+    if search:
+        expenses=expenses.filter(name__icontains=search)
+
     category = request.GET.get('category')
     if category:
         expenses = expenses.filter(category_id=category)
@@ -109,11 +125,13 @@ def expenses(request):
     exp_sum=expenses.aggregate(total=Sum('value'))['total'] or 0
 
     categories = Category.objects.all()
+    projects = Project.objects.filter(user=request.user)
 
     context = {
         "expenses": expenses,
         "categories": categories,
         "exp_sum":exp_sum,
+        "projects":projects,
     }
     return render(request, 'simpleApp/expenses.html', context)
 
@@ -142,13 +160,15 @@ def add_expense(request):
 @login_required
 def delete_expense(request, id):
     expense = get_object_or_404(
-        Expense,
-        id=id,
-        project__user=request.user
-    )
+            Expense,
+            id=id,
+            project__user=request.user
+        )
+    if request.method == "POST":
+        expense.delete()
+        return redirect("expenses")
 
-    expense.delete()
-    return redirect('expenses')
+    return render(request,"simpleApp/delete_confirmation.html",{"expense": expense})
 
 @login_required
 def expense_details(request, id):
