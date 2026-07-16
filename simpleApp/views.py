@@ -355,7 +355,9 @@ def edit_category(request, id):
 # ---------------- CONTRIBUTORS REPORT ----------------
 @login_required
 def contributers(request):
-    data = Contribution.objects.values(
+    data = Contribution.objects.filter(
+        project__user=request.user
+    ).values(
         'name',
         'project__name'
     ).annotate(
@@ -365,15 +367,19 @@ def contributers(request):
 
     project_totals = {
         item['project__name']: item['total']
-        for item in Contribution.objects.values('project__name').annotate(total=Sum('amount'))
+        for item in Contribution.objects.filter(project__user=request.user)
+        .values('project__name')
+        .annotate(total=Sum('amount'))
     }
 
     for item in data:
         project_name = item['project__name']
-        project_total = project_totals.get(project_name,0)
+        project_total = project_totals.get(project_name, 0)
 
         if project_total > 0:
-            item['percentage'] = round((item['total'] / project_total) * 100, 2)
+            item['percentage'] = round(
+                (item['total'] / project_total) * 100, 2
+            )
         else:
             item['percentage'] = 0
 
