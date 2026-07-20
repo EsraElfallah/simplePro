@@ -47,7 +47,22 @@ def dashboard(request):
 @login_required
 def projects(request):
     projects = Project.objects.filter(user=request.user)
-    return render(request, 'simpleApp/projects.html', {'projectsH': projects})
+
+    search_name=request.GET.get("search")
+    if search_name:
+       projects=projects.filter(name__icontains=search_name) 
+
+    status=request.GET.get("status")
+    if status:
+       projects= projects.filter(status=status)
+
+    context={
+        'projectsH': projects,
+        'status_choices' :Project.STATUS_CHOICES,
+        'status':status,
+
+    }
+    return render(request, 'simpleApp/projects.html',context)
 
 @login_required
 def project_details(request, id):
@@ -202,7 +217,24 @@ def edit_expense(request, id):
 @login_required
 def contributions(request):
     contribution = Contribution.objects.filter(project__user=request.user)
-    return render(request, 'simpleApp/contributions.html', {'contributionH': contribution})
+    projects= Project.objects.filter(user=request.user)
+
+    contributername=request.GET.get('search')
+    if contributername:
+        contribution=contribution.filter(name__icontains=contributername)
+
+    projectname=request.GET.get('project')
+    if projectname:
+        contribution=contribution.filter(project__id=projectname)
+
+    context={
+        'contributionH': contribution,
+        'projects':projects,
+        'contributername':contributername,
+        'projectname':projectname,
+
+    }
+    return render(request, 'simpleApp/contributions.html',context)
 
 @login_required
 def add_contribution(request):

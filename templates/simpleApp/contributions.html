@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}لوحة التحكم{% endblock %}
+{% block title %}لوحة المساهمات{% endblock %}
 
 {% block content %}
     
@@ -23,6 +23,35 @@
                 <i class="bi bi-plus-circle"></i>
                 إضافة سهم
             </a>
+        </div>
+
+
+        <div class="container my-4">
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <form method="GET">
+                    <div class="row">
+                        <div class="col-3">
+                            <input name="search" class="form-control" type="text" value="{{ contributername|default_if_none:'' }}" placeholder="بحث باسم المساهم">
+                        </div>
+                        <div class="col-3">
+                            <select name="project" class="form-control">
+                                <option value="">كل المشاريع</option>
+                                {%for p in projects%}
+                                <option value="{{p.id}}" {%if projectname == p.id|stringformat:"s" %}selected{%endif%} >{{p.name}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-primary w-100" type="submit">بحث</button>
+                        </div>
+                        <div class="col-3">
+                            <a href="{% url 'contributions' %}" class="btn btn-outline-secondary w-100"><i class="bi bi-x-circle me-2"></i>
+                            إلغاء الفلاتر
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         {% for c in contributionH %}

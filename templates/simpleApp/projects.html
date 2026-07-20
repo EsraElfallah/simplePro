@@ -25,6 +25,58 @@
         </a>
     </div>
 
+   
+
+    <div class="container mb-4">
+        <div class="card shadow-sm border-0 rounded-4 p-3">
+
+            <form method="GET">
+                <div class="row g-3 align-items-center">
+
+                    <!-- البحث -->
+                    <div class="col-md-4">
+                        <input 
+                            type="text" 
+                            placeholder="البحث باسم المشروع"
+                            class="form-control"
+                            name="search"
+                            value="{{ search_name|default:'' }}">
+                    </div>
+
+                    <!-- الحالة -->
+                    <div class="col-md-3">
+                        <select class="form-select" name="status">
+                            <option value="">كل الحالات</option>
+
+                            {% for value, label in status_choices %}
+                                <option value="{{ value }}" 
+                                    {% if value == status %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- زر البحث -->
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">
+                            بحث
+                        </button>
+                    </div>
+
+                    <!-- إلغاء -->
+                    <div class="col-md-3">
+                        <a href="{% url 'projects' %}" class="btn btn-secondary w-100">
+                            إلغاء الفلتر
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
     {% for p in projectsH %}
 
     <div class="card shadow border-0 mb-4">
